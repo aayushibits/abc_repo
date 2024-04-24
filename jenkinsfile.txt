@@ -1,42 +1,35 @@
-pipeline { 
-    agent any 
-     
-    stages { 
-        stage('Checkout') { 
-            steps { 
-                // Checkout code from Git repository 
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
                 checkout([$class: 'GitSCM', 
-                          branches: [[name: '*/main']], name 
-                          userRemoteConfigs: [[url: 'https:// 
-https://github.com/aayushibits/abc_repo.git ']]])  
-            } 
-        } 
-         
-        stage('Build and Compile') { 
-            steps { 
-                // Use Maven to build and compile the project 
-                sh 'mvn clean compile' 
-            } 
-             
-            post { 
-                success { 
-                    // If build succeeds, archive the build artifacts 
-                    archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true 
-                } 
-                 
-                failure { 
-                    // If build fails, send a notification or take other actions 
-                    echo 'Build failed! Please check the build logs.' 
-                } 
-            } 
-        } 
-    } 
-     
-    // Post-build actions (optional) 
-    post { 
-        always { 
-            // Clean up workspace after the build is complete 
-            cleanWs() 
-        } 
-    } 
-} 
+                          branches: [[name: '*/main']], 
+                          userRemoteConfigs: [[url: 'https://github.com/aayushibits/abc_repo.git']]])
+            }
+        }
+
+        stage('Build and Compile') {
+            steps {
+                sh 'mvn clean compile' // Assuming Maven build
+            }
+
+            post {
+                success {
+                    echo 'Build and compile succeeded!'
+                }
+
+                failure {
+                    echo 'Build and compile failed!'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Cleanup or any other post-build actions
+        }
+    }
+}
